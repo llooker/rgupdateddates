@@ -10,6 +10,9 @@ datagroup: rg_dates_example_default_datagroup {
 
 persist_with: rg_dates_example_default_datagroup
 
+explore: raw_data {}
+
+
 # explore: dates {
 #   join: derived_table {
 #     view_label: "Dates"
