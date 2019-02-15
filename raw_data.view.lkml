@@ -23,5 +23,7 @@ view: raw_data {
 
   dimension: is_before_mtd {
   type: yesno
-   sql:EXTRACT(DAY FROM ${TABLE}.created_at) < EXTRACT(DAY FROM GETDATE());;}
+   sql:EXTRACT(DAY FROM ${TABLE}.created_at) < EXTRACT(DAY FROM GETDATE());;
+  }
+
 }
