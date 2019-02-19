@@ -14,7 +14,7 @@ view: qtd_derived {
   }
 
   dimension_group: date {
-    #hidden: yes
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -29,8 +29,9 @@ view: qtd_derived {
     sql: ${TABLE}.Date ;;
   }
 
-  dimension: Join_Key_Raw {
+  dimension: Join_Key_QTD_Derived {
     hidden: yes
+    type: string
     sql: ${TABLE}.Date;;
   }
 

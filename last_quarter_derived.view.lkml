@@ -22,8 +22,8 @@ view: last_quarter_derived {
     }
 
 
-    dimension: Join_Key_Raw {
-      #hidden: yes
+    dimension: Join_Key_LQ_Raw {
+      hidden: yes
       type: string
       sql: CASE WHEN ${quarter} > 1 THEN concat(cast(${year} as string),cast(${quarter}-1 as string))
         WHEN ${quarter} = 1 THEN concat(cast(${year}-1 as string),cast(${quarter}+3 as string)) END;;

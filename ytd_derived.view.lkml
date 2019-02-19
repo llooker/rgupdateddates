@@ -13,7 +13,7 @@ view: ytd_derived {
   }
 
   dimension_group: date {
-    #hidden: yes
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -28,10 +28,11 @@ view: ytd_derived {
     sql: ${TABLE}.Date ;;
   }
 
-  dimension: Join_Key_Raw {
-    hidden: yes
-    sql: ${TABLE}.Date;;
-  }
+ dimension: Join_Key_YTD_Derived {
+  hidden: yes
+  type: string
+  sql: ${TABLE}.Date;;
+}
 
 
   dimension: ytd_sales_raw {

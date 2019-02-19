@@ -29,7 +29,7 @@ view: last_mtd_derived {
       sql: ${TABLE}.Date ;;
     }
 
-    dimension: Join_Key_Raw {
+    dimension: Join_Key_LMTD_Raw {
       sql: DATE_ADD(${TABLE}.Date, INTERVAL 1 MONTH);;
     }
 

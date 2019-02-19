@@ -14,7 +14,7 @@ view: mtd_derived {
  }
 
   dimension_group: date {
-    #hidden: yes
+    hidden: yes
     type: time
     timeframes: [
       raw,
@@ -29,7 +29,7 @@ view: mtd_derived {
     sql: ${TABLE}.Date ;;
   }
 
-  dimension: Join_Key_Raw {
+  dimension: Join_Key_MTD_Derived {
     hidden: yes
     sql: ${TABLE}.Date;;
   }

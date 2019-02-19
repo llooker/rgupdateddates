@@ -16,59 +16,113 @@ view: raw_data {
     sql: ${TABLE}.Date ;;
   }
 
-  dimension: sales {
+  dimension: month {
+    hidden: yes
+    type: string
+    sql: EXTRACT(MONTH FROM ${TABLE}.Date) ;;
+  }
+
+  dimension: year {
+    hidden: yes
+    type: string
+    sql: EXTRACT(YEAR FROM ${TABLE}.Date) ;;
+  }
+
+  dimension: quarter {
+    hidden: yes
+    type: string
+      sql: EXTRACT(QUARTER FROM ${TABLE}.Date) ;;
+
+  }
+
+  dimension: day {
+    hidden: yes
+    type: string
+    sql: EXTRACT(DAY FROM ${TABLE}.Date) ;;
+  }
+
+  dimension: Join_Key_MTD_Derived {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.Date;;
+  }
+
+  dimension: Join_Key_QTD_Derived {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.Date;;
+  }
+
+  dimension: Join_Key_YTD_Derived {
+    hidden: yes
+    type: string
+    sql: ${TABLE}.Date;;
+  }
+
+  dimension: Join_Key_Last_Month_Derived {
+    hidden: yes
+    type: string
+    sql: Concat(cast(${year} as string),cast(${month} as string));;
+  }
+
+  dimension: Join_Key_LMTD_Raw {
+    hidden: yes
+    sql: ${TABLE}.Date;;
+  }
+
+  dimension: Join_Key_LQTD_Raw {
+    hidden: yes
+    type: string
+    sql: concat(cast(${year} as string),cast(${quarter} as string));;
+
+  }
+
+  dimension: Join_Key_LQ_Raw {
+    hidden: yes
+    type: string
+    sql: concat(cast(${year} as string),cast(${quarter} as string));;
+
+  }
+
+  dimension: Join_Key_LY_Raw {
+    hidden: yes
+    type: string
+    sql: Concat(cast(${year} as string));;
+
+  }
+
+  dimension: Join_Key_LYTD_Raw {
+    sql: ${TABLE}.Date;;
+  }
+
+  dimension: sales_raw {
     hidden: yes
     type: number
     sql: ${TABLE}.Sales ;;
   }
 
-  measure: total_sales {
+  measure: sales {
     group_label: "Sales Metrics"
     type: sum
     value_format_name: usd
-    sql: ${sales} ;;
+    sql: ${sales_raw} ;;
   }
 
-   measure: month_to_date_sales_raw {
-    type: sum
-    value_format_name: usd
-    sql: ${sales} ;;
-    filters: {
-      field: raw_data.is_before_mtd
-      value: "yes"
-    }
-   }
-
-  measure: month_to_date_sales {
-    direction: "column"
-    type: running_total
-    sql: ${month_to_date_sales_raw} ;;
-    value_format_name: usd
-  }
-
-dimension: testdate {
-  type: date
-  #type: yesno
-  sql: EXTRACT(DAY FROM ${TABLE}.Date) < EXTRACT(DAY FROM CURRENT_DATE()) ;;
-}
-
-  dimension: testmonth {
-    type: date
-    #type: yesno
-    sql: EXTRACT(MONTH FROM ${TABLE}.Date) < EXTRACT(MONTH FROM CURRENT_DATE()) ;;
-  }
-
-  dimension: testyear {
-    type: date
-    #type: yesno
-    sql: EXTRACT(YEAR FROM ${TABLE}.Date) < EXTRACT(YEAR FROM CURRENT_DATE()) ;;
-  }
-
-  dimension: is_before_mtd {
-  type: yesno
-   sql:EXTRACT(DAY FROM ${TABLE}.Date) <= EXTRACT(DAY FROM CURRENT_DATE())
-  AND EXTRACT(MONTH FROM ${TABLE}.Date) = EXTRACT(MONTH FROM CURRENT_DATE())
-  AND EXTRACT(YEAR FROM ${TABLE}.Date) = EXTRACT(YEAR FROM CURRENT_DATE());;
-  }
+#    measure: month_to_date_sales_raw {
+#     type: sum
+#     value_format_name: usd
+#     sql: ${sales} ;;
+#     filters: {
+#       field: raw_data.is_before_mtd
+#       value: "yes"
+#     }
+#    }
+#
+#   measure: month_to_date_sales {
+#     direction: "column"
+#     type: running_total
+#     sql: ${month_to_date_sales_raw} ;;
+#     value_format_name: usd
+#   }
 
 }

@@ -21,8 +21,8 @@ dimension: month {
   }
 
 
-  dimension: Join_Key_Raw {
-    #hidden: yes
+  dimension: Join_Key_Last_Month_Derived {
+    hidden: yes
     type: string
     sql: CASE WHEN ${month} > 1 THEN concat(cast(${year} as string),cast(${month}-1 as string))
     WHEN ${month} = 1 THEN concat(cast(${year}-1 as string),cast(${month}+11 as string)) END;;

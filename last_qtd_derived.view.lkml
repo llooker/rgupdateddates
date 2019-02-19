@@ -5,28 +5,38 @@ view: last_qtd_derived {
            Sales,
            SUM(Sales) OVER (ORDER BY Date ASC rows unbounded preceding) as last_qtd_sales_raw
            FROM rob.updateddates
-           WHERE
-
+          WHERE
             CASE WHEN
-            (EXTRACT(QUARTER FROM Date) = EXTRACT(QUARTER FROM CURRENT_DATE())
-            AND
-            EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)))
+            EXTRACT(QUARTER FROM Date) = 4 AND
+            EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR))
+            THEN
+            EXTRACT(QUARTER FROM Date) = 4
 
-            THEN EXTRACT(QUARTER FROM Date) <= EXTRACT(QUARTER FROM CURRENT_DATE())
-
-            WHEN
-            (EXTRACT(MONTH FROM Date) < EXTRACT(MONTH FROM CURRENT_DATE())
-            AND
-            EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)))
-
-            THEN  EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR))
-
-
-            END
+          END
            GROUP BY Date, Sales
            ;;
       persist_for: "48 hours"
     }
+
+  dimension: year {
+    type: number
+    sql: EXTRACT(YEAR FROM ${TABLE}.Date) ;;
+  }
+
+
+  dimension: quarter {
+    type: number
+    sql: EXTRACT(QUARTER FROM ${TABLE}.Date) ;;
+  }
+
+
+  dimension: Join_Key_LQTD_Raw {
+    hidden: yes
+    type: string
+    sql: concat(cast(${year}+1 as string),cast(${quarter}-3 as string));;
+
+  }
+
 
   dimension_group: date {
     #hidden: yes
@@ -42,11 +52,6 @@ view: last_qtd_derived {
     convert_tz: no
     datatype: date
     sql: ${TABLE}.Date ;;
-  }
-
-  dimension: Join_Key_Raw {
-    hidden: yes
-    sql: ${TABLE}.Date;;
   }
 
 

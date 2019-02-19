@@ -15,8 +15,8 @@ view: last_year_derived {
     }
 
 
-    dimension: Join_Key_Raw {
-      #hidden: yes
+    dimension: Join_Key_LY_Raw {
+      hidden: yes
       type: string
       sql: Concat(cast(${year}-1 as string));;
 

@@ -44,7 +44,7 @@ view: last_ytd_derived {
       sql: ${TABLE}.Date ;;
     }
 
-    dimension: Join_Key_Raw {
+    dimension: Join_Key_LYTD_Raw {
       sql: DATE_ADD(${TABLE}.Date, INTERVAL 1 YEAR);;
     }
 

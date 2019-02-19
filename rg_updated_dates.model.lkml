@@ -10,30 +10,61 @@ datagroup: rg_dates_example_default_datagroup {
 
 persist_with: rg_dates_example_default_datagroup
 
-explore: raw_data {}
+explore: raw_data {
+  join: mtd_derived{
+    view_label: "Raw Data"
+    relationship: one_to_one
+    sql_on: ${raw_data.Join_Key_MTD_Derived}=${mtd_derived.Join_Key_MTD_Derived} ;;
+  }
 
-explore: last_month_derived {}
+  join: qtd_derived{
+    view_label: "Raw Data"
+    relationship: one_to_one
+    sql_on: ${raw_data.Join_Key_QTD_Derived}=${qtd_derived.Join_Key_QTD_Derived} ;;
+  }
 
-explore: last_quarter_derived {}
+  join: ytd_derived{
+    view_label: "Raw Data"
+    relationship: one_to_one
+    sql_on: ${raw_data.Join_Key_YTD_Derived}=${ytd_derived.Join_Key_YTD_Derived} ;;
+  }
 
-explore: last_year_derived{}
+  join: last_month_derived{
+    view_label: "Raw Data"
+    relationship: one_to_one
+    sql_on: ${raw_data.Join_Key_Last_Month_Derived}=${last_month_derived.Join_Key_Last_Month_Derived} ;;
+  }
 
-explore: last_mtd_derived {}
+  join: last_mtd_derived{
+    view_label: "Raw Data"
+    relationship: one_to_one
+    sql_on: ${raw_data.Join_Key_LMTD_Raw}=${last_mtd_derived.Join_Key_LMTD_Raw} ;;
+  }
 
-explore: last_qtd_derived {}
+  join: last_qtd_derived{
+    view_label: "Raw Data"
+    relationship: one_to_one
+    sql_on: ${raw_data.Join_Key_LQTD_Raw}=${last_qtd_derived.Join_Key_LQTD_Raw} ;;
+  }
 
-explore: last_ytd_derived {}
+  join: last_quarter_derived {
+    view_label: "Raw Data"
+    relationship: one_to_one
+    sql_on: ${raw_data.Join_Key_LQ_Raw}=${last_quarter_derived.Join_Key_LQ_Raw} ;;
+  }
 
-explore: mtd_derived {}
+  join: last_year_derived{
+    view_label: "Raw Data"
+    relationship: one_to_one
+    sql_on: ${raw_data.Join_Key_LY_Raw}=${last_year_derived.Join_Key_LY_Raw} ;;
+  }
 
-explore: ytd_derived {}
+  join: last_ytd_derived{
+    view_label: "Raw Data"
+    relationship: one_to_one
+    sql_on: ${raw_data.Join_Key_LYTD_Raw}=${last_ytd_derived.Join_Key_LYTD_Raw} ;;
+  }
 
-explore: qtd_derived {}
 
-# explore: dates {
-#   join: derived_table {
-#     view_label: "Dates"
-#     relationship: one_to_one
-#     sql_on: ${dates.Join_Key} = ${derived_table.Join_Key} ;;
-#   }
-# }
+
+}
