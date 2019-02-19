@@ -14,7 +14,7 @@ view: last_mtd_derived {
     }
 
     dimension_group: date {
-      #hidden: yes
+      hidden: yes
       type: time
       timeframes: [
         raw,
@@ -30,6 +30,7 @@ view: last_mtd_derived {
     }
 
     dimension: Join_Key_LMTD_Raw {
+      hidden: yes
       sql: DATE_ADD(${TABLE}.Date, INTERVAL 1 MONTH);;
     }
 

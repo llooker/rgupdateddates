@@ -10,6 +10,7 @@ view: last_year_derived {
     }
 
     dimension: year {
+      hidden: yes
       type: number
       sql: ${TABLE}.Year ;;
     }
@@ -18,11 +19,9 @@ view: last_year_derived {
     dimension: Join_Key_LY_Raw {
       hidden: yes
       type: string
-      sql: Concat(cast(${year}-1 as string));;
+      sql: Concat(cast(${year}+1 as string));;
 
     }
-
-##concat(cast(${year} as string),cast(${month} as string)) ELSE END;;
 
     dimension: last_year_sales_raw {
       hidden: yes

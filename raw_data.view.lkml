@@ -73,9 +73,20 @@ view: raw_data {
   dimension: Join_Key_LQTD_Raw {
     hidden: yes
     type: string
-    sql: concat(cast(${year} as string),cast(${quarter} as string));;
+    sql:
+    concat(cast(${year} as string),'-',cast(${month} as string), '-', cast(${day} as string));;
 
   }
+
+
+  dimension: Join_Key_LQTD_TEST {
+    hidden: yes
+    type: string
+     sql: concat(cast(${year}+1 as string),'-',cast(${month}-9 as string)), '-', cast(${day} as string));;
+
+
+  }
+
 
   dimension: Join_Key_LQ_Raw {
     hidden: yes
@@ -92,6 +103,7 @@ view: raw_data {
   }
 
   dimension: Join_Key_LYTD_Raw {
+    hidden: yes
     sql: ${TABLE}.Date;;
   }
 
@@ -107,22 +119,4 @@ view: raw_data {
     value_format_name: usd
     sql: ${sales_raw} ;;
   }
-
-#    measure: month_to_date_sales_raw {
-#     type: sum
-#     value_format_name: usd
-#     sql: ${sales} ;;
-#     filters: {
-#       field: raw_data.is_before_mtd
-#       value: "yes"
-#     }
-#    }
-#
-#   measure: month_to_date_sales {
-#     direction: "column"
-#     type: running_total
-#     sql: ${month_to_date_sales_raw} ;;
-#     value_format_name: usd
-#   }
-
 }

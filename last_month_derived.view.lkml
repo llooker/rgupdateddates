@@ -11,11 +11,13 @@ view: last_month_derived {
   }
 
 dimension: month {
+  hidden: yes
   type: number
   sql: ${TABLE}.Month ;;
 }
 
   dimension: year {
+    hidden: yes
     type: number
     sql: ${TABLE}.Year ;;
   }
@@ -24,12 +26,10 @@ dimension: month {
   dimension: Join_Key_Last_Month_Derived {
     hidden: yes
     type: string
-    sql: CASE WHEN ${month} > 1 THEN concat(cast(${year} as string),cast(${month}-1 as string))
-    WHEN ${month} = 1 THEN concat(cast(${year}-1 as string),cast(${month}+11 as string)) END;;
+    sql: CASE WHEN ${month} = 12 THEN concat(cast(${year}+1 as string),cast(${month}-11 as string))
+    WHEN ${month} < 12 THEN concat(cast(${year} as string),cast(${month}+1 as string)) END;;
 
   }
-
-##concat(cast(${year} as string),cast(${month} as string)) ELSE END;;
 
   dimension: last_month_sales_raw {
     hidden: yes

@@ -19,27 +19,41 @@ view: last_qtd_derived {
     }
 
   dimension: year {
+    hidden: yes
     type: number
     sql: EXTRACT(YEAR FROM ${TABLE}.Date) ;;
   }
 
 
   dimension: quarter {
+    hidden: yes
     type: number
     sql: EXTRACT(QUARTER FROM ${TABLE}.Date) ;;
   }
 
+  dimension: month {
+    hidden: yes
+    type: number
+    sql: EXTRACT(MONTH FROM ${TABLE}.Date) ;;
+  }
+
+  dimension: day {
+    hidden: yes
+    type: number
+    sql: EXTRACT(DAY FROM ${TABLE}.Date) ;;
+  }
 
   dimension: Join_Key_LQTD_Raw {
     hidden: yes
     type: string
-    sql: concat(cast(${year}+1 as string),cast(${quarter}-3 as string));;
+    sql: concat(cast(${year}+1 as string),'-',cast(${month}-9 as string), '-', cast(${day} as string));;
 
   }
 
 
+
   dimension_group: date {
-    #hidden: yes
+    hidden: yes
     type: time
     timeframes: [
       raw,

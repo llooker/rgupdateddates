@@ -11,12 +11,14 @@ view: last_quarter_derived {
     }
 
   dimension: year {
+    hidden: yes
     type: number
     sql: ${TABLE}.Year ;;
   }
 
 
     dimension: quarter {
+      hidden: yes
       type: number
       sql: ${TABLE}.Quarter ;;
     }
@@ -25,12 +27,10 @@ view: last_quarter_derived {
     dimension: Join_Key_LQ_Raw {
       hidden: yes
       type: string
-      sql: CASE WHEN ${quarter} > 1 THEN concat(cast(${year} as string),cast(${quarter}-1 as string))
-        WHEN ${quarter} = 1 THEN concat(cast(${year}-1 as string),cast(${quarter}+3 as string)) END;;
+      sql: CASE WHEN ${quarter} < 4 THEN concat(cast(${year} as string),cast(${quarter}+1 as string))
+        WHEN ${quarter} = 4 THEN concat(cast(${year}+1 as string),cast(${quarter}-3 as string)) END;;
 
     }
-
-##concat(cast(${year} as string),cast(${month} as string)) ELSE END;;
 
     dimension: last_quarter_sales_raw {
       hidden: yes

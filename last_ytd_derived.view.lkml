@@ -29,7 +29,7 @@ view: last_ytd_derived {
     }
 
     dimension_group: date {
-      #hidden: yes
+      hidden: yes
       type: time
       timeframes: [
         raw,
@@ -45,6 +45,7 @@ view: last_ytd_derived {
     }
 
     dimension: Join_Key_LYTD_Raw {
+      hidden: yes
       sql: DATE_ADD(${TABLE}.Date, INTERVAL 1 YEAR);;
     }
 
