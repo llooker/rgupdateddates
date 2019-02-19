@@ -1,69 +1,66 @@
 view: last_ytd_derived {
-  # # You can specify the table name if it's different from the view name:
-  # sql_table_name: my_schema_name.tester ;;
-  #
-  # # Define your dimensions and measures here, like this:
-  # dimension: user_id {
-  #   description: "Unique ID for each user that has ordered"
-  #   type: number
-  #   sql: ${TABLE}.user_id ;;
-  # }
-  #
-  # dimension: lifetime_orders {
-  #   description: "The total number of orders for each user"
-  #   type: number
-  #   sql: ${TABLE}.lifetime_orders ;;
-  # }
-  #
-  # dimension_group: most_recent_purchase {
-  #   description: "The date when each user last ordered"
-  #   type: time
-  #   timeframes: [date, week, month, year]
-  #   sql: ${TABLE}.most_recent_purchase_at ;;
-  # }
-  #
-  # measure: total_lifetime_orders {
-  #   description: "Use this for counting lifetime orders across many users"
-  #   type: sum
-  #   sql: ${lifetime_orders} ;;
-  # }
-}
+    derived_table: {
+      sql: SELECT
+           Date,
+           Sales,
+           SUM(Sales) OVER (ORDER BY Date ASC rows unbounded preceding) as last_ytd_sales_raw
+           FROM rob.updateddates
+           WHERE
 
-# view: last_ytd_derived {
-#   # Or, you could make this view a derived table, like this:
-#   derived_table: {
-#     sql: SELECT
-#         user_id as user_id
-#         , COUNT(*) as lifetime_orders
-#         , MAX(orders.created_at) as most_recent_purchase_at
-#       FROM orders
-#       GROUP BY user_id
-#       ;;
-#   }
-#
-#   # Define your dimensions and measures here, like this:
-#   dimension: user_id {
-#     description: "Unique ID for each user that has ordered"
-#     type: number
-#     sql: ${TABLE}.user_id ;;
-#   }
-#
-#   dimension: lifetime_orders {
-#     description: "The total number of orders for each user"
-#     type: number
-#     sql: ${TABLE}.lifetime_orders ;;
-#   }
-#
-#   dimension_group: most_recent_purchase {
-#     description: "The date when each user last ordered"
-#     type: time
-#     timeframes: [date, week, month, year]
-#     sql: ${TABLE}.most_recent_purchase_at ;;
-#   }
-#
-#   measure: total_lifetime_orders {
-#     description: "Use this for counting lifetime orders across many users"
-#     type: sum
-#     sql: ${lifetime_orders} ;;
-#   }
-# }
+            CASE WHEN
+            (EXTRACT(MONTH FROM Date) = EXTRACT(MONTH FROM CURRENT_DATE())
+            AND
+            EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)))
+
+            THEN EXTRACT(DAY FROM Date) <= EXTRACT(DAY FROM CURRENT_DATE())
+
+            WHEN
+            (EXTRACT(MONTH FROM Date) < EXTRACT(MONTH FROM CURRENT_DATE())
+            AND
+            EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)))
+
+            THEN  EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR))
+
+
+            END
+           GROUP BY Date, Sales
+           ;;
+      persist_for: "48 hours"
+    }
+
+    dimension_group: date {
+      #hidden: yes
+      type: time
+      timeframes: [
+        raw,
+        date,
+        week,
+        month,
+        quarter,
+        year
+      ]
+      convert_tz: no
+      datatype: date
+      sql: ${TABLE}.Date ;;
+    }
+
+    dimension: Join_Key_Raw {
+      sql: DATE_ADD(${TABLE}.Date, INTERVAL 1 YEAR);;
+    }
+
+
+    dimension: last_ytd_sales_raw {
+      hidden: yes
+      type: number
+      sql: ${TABLE}.last_ytd_sales_raw ;;
+    }
+
+    measure: last_mtd_total_sales {
+      group_label: "Previous Sales Metrics"
+      label: "Last YTD Sales"
+      type: number
+      sql: coalesce(max(${last_ytd_sales_raw}),0) ;;
+      value_format_name: usd
+    }
+
+  }

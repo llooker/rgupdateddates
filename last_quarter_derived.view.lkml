@@ -1,69 +1,49 @@
 view: last_quarter_derived {
-  # # You can specify the table name if it's different from the view name:
-  # sql_table_name: my_schema_name.tester ;;
-  #
-  # # Define your dimensions and measures here, like this:
-  # dimension: user_id {
-  #   description: "Unique ID for each user that has ordered"
-  #   type: number
-  #   sql: ${TABLE}.user_id ;;
-  # }
-  #
-  # dimension: lifetime_orders {
-  #   description: "The total number of orders for each user"
-  #   type: number
-  #   sql: ${TABLE}.lifetime_orders ;;
-  # }
-  #
-  # dimension_group: most_recent_purchase {
-  #   description: "The date when each user last ordered"
-  #   type: time
-  #   timeframes: [date, week, month, year]
-  #   sql: ${TABLE}.most_recent_purchase_at ;;
-  # }
-  #
-  # measure: total_lifetime_orders {
-  #   description: "Use this for counting lifetime orders across many users"
-  #   type: sum
-  #   sql: ${lifetime_orders} ;;
-  # }
-}
+    derived_table: {
+      sql: SELECT
+          EXTRACT(QUARTER FROM Date) AS Quarter,
+          EXTRACT(YEAR FROM Date) AS Year,
+           SUM(Sales)  as last_quarter_sales_raw
+           FROM rob.updateddates
+           GROUP BY Year,Quarter
+           ;;
+      persist_for: "48 hours"
+    }
 
-# view: last_quarter_derived {
-#   # Or, you could make this view a derived table, like this:
-#   derived_table: {
-#     sql: SELECT
-#         user_id as user_id
-#         , COUNT(*) as lifetime_orders
-#         , MAX(orders.created_at) as most_recent_purchase_at
-#       FROM orders
-#       GROUP BY user_id
-#       ;;
-#   }
-#
-#   # Define your dimensions and measures here, like this:
-#   dimension: user_id {
-#     description: "Unique ID for each user that has ordered"
-#     type: number
-#     sql: ${TABLE}.user_id ;;
-#   }
-#
-#   dimension: lifetime_orders {
-#     description: "The total number of orders for each user"
-#     type: number
-#     sql: ${TABLE}.lifetime_orders ;;
-#   }
-#
-#   dimension_group: most_recent_purchase {
-#     description: "The date when each user last ordered"
-#     type: time
-#     timeframes: [date, week, month, year]
-#     sql: ${TABLE}.most_recent_purchase_at ;;
-#   }
-#
-#   measure: total_lifetime_orders {
-#     description: "Use this for counting lifetime orders across many users"
-#     type: sum
-#     sql: ${lifetime_orders} ;;
-#   }
-# }
+  dimension: year {
+    type: number
+    sql: ${TABLE}.Year ;;
+  }
+
+
+    dimension: quarter {
+      type: number
+      sql: ${TABLE}.Quarter ;;
+    }
+
+
+    dimension: Join_Key_Raw {
+      #hidden: yes
+      type: string
+      sql: CASE WHEN ${quarter} > 1 THEN concat(cast(${year} as string),cast(${quarter}-1 as string))
+        WHEN ${quarter} = 1 THEN concat(cast(${year}-1 as string),cast(${quarter}+3 as string)) END;;
+
+    }
+
+##concat(cast(${year} as string),cast(${month} as string)) ELSE END;;
+
+    dimension: last_quarter_sales_raw {
+      hidden: yes
+      type: number
+      sql: ${TABLE}.last_quarter_sales_raw ;;
+    }
+
+    measure: last_quarter_total_sales {
+      group_label: "Previous Sales Metrics"
+      label: "Last Quarter Sales"
+      type: number
+      sql: coalesce(max(${last_quarter_sales_raw}),0) ;;
+      value_format_name: usd
+    }
+
+  }

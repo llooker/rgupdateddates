@@ -30,8 +30,7 @@ view: last_mtd_derived {
     }
 
     dimension: Join_Key_Raw {
-      hidden: yes
-      sql: ${TABLE}.Date;;
+      sql: DATE_ADD(${TABLE}.Date, INTERVAL 1 MONTH);;
     }
 
 

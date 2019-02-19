@@ -1,17 +1,32 @@
 view: last_qtd_derived {
   derived_table: {
-    sql: SELECT
+      sql: SELECT
            Date,
            Sales,
            SUM(Sales) OVER (ORDER BY Date ASC rows unbounded preceding) as last_qtd_sales_raw
            FROM rob.updateddates
-           WHERE EXTRACT(DAYOFYEAR FROM Date) <= EXTRACT(DAYOFYEAR FROM CURRENT_DATE()) AND
-           EXTRACT(QUARTER FROM Date) = EXTRACT(QUARTER FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 QUARTER))
-           --AND EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM CURRENT_DATE())
+           WHERE
+
+            CASE WHEN
+            (EXTRACT(QUARTER FROM Date) = EXTRACT(QUARTER FROM CURRENT_DATE())
+            AND
+            EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)))
+
+            THEN EXTRACT(QUARTER FROM Date) <= EXTRACT(QUARTER FROM CURRENT_DATE())
+
+            WHEN
+            (EXTRACT(MONTH FROM Date) < EXTRACT(MONTH FROM CURRENT_DATE())
+            AND
+            EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)))
+
+            THEN  EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR))
+
+
+            END
            GROUP BY Date, Sales
            ;;
-    persist_for: "48 hours"
-  }
+      persist_for: "48 hours"
+    }
 
   dimension_group: date {
     #hidden: yes
