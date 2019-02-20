@@ -38,7 +38,7 @@ view: last_qtd_derived {
   }
 
   dimension: Join_Key_LQTD_Raw {
-    #hidden: yes
+    hidden: yes
     type: string
     sql:
 
