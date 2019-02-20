@@ -5,7 +5,7 @@ view: last_ytd_derived {
          Date,
          EXTRACT(YEAR FROM Date),
          Sales,
-         SUM(Sales) OVER (PARTITION BY EXTRACT(YEAR FROM Date) ORDER BY Date ASC rows unbounded preceding) as lytd_sales_raw
+         SUM(Sales) OVER (PARTITION BY EXTRACT(YEAR FROM Date) ORDER BY Date ASC rows unbounded preceding) as last_ytd_sales_raw
          FROM rob.updateddates
            ;;
       persist_for: "48 hours"
