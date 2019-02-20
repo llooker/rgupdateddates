@@ -1,15 +1,12 @@
 view: qtd_derived {
   derived_table: {
-    sql: SELECT
-         Date,
-         Sales,
-         SUM(Sales) OVER (ORDER BY Date ASC rows unbounded preceding) as qtd_sales_raw
-         FROM rob.updateddates
-         WHERE
-        EXTRACT(QUARTER FROM Date) = EXTRACT(QUARTER FROM CURRENT_DATE())
-         AND EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM CURRENT_DATE())
-         GROUP BY Date, Sales
-         ;;
+    sql:
+           SELECT
+           Date,
+           Sales,
+           SUM(Sales) OVER (PARTITION BY DATE_TRUNC(date, quarter) ORDER BY Date ASC rows unbounded preceding) as qtd_sales_raw
+           FROM rob.updateddates
+          ;;
     persist_for: "48 hours"
   }
 

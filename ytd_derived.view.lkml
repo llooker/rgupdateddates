@@ -1,13 +1,12 @@
 view: ytd_derived {
   derived_table: {
-    sql: SELECT
+    sql:
+        SELECT
          Date,
+         EXTRACT(YEAR FROM Date),
          Sales,
-         SUM(Sales) OVER (ORDER BY Date ASC rows unbounded preceding) as ytd_sales_raw
+         SUM(Sales) OVER (PARTITION BY EXTRACT(YEAR FROM Date) ORDER BY Date ASC rows unbounded preceding) as ytd_sales_raw
          FROM rob.updateddates
-         WHERE
-         EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM CURRENT_DATE())
-         GROUP BY Date, Sales
          ;;
     persist_for: "48 hours"
   }

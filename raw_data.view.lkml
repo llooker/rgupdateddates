@@ -79,13 +79,21 @@ view: raw_data {
   }
 
 
-  dimension: Join_Key_LQTD_TEST {
-    hidden: yes
-    type: string
-     sql: concat(cast(${year}+1 as string),'-',cast(${month}-9 as string)), '-', cast(${day} as string));;
+#   dimension: Join_Key_LQTD_TEST {
+#     hidden: yes
+#     type: string
+#      sql:
+#     type: string
+#     sql:
+#     CASE WHEN ${month} = 10 OR ${month} = 11 OR ${month} = 12
+#     THEN
+#     concat(cast(${year}+1 as string),'-',cast(${month}-9 as string), '-', cast(${day} as string))
+#     ELSE
+#
+#     END;;
 
+    #concat(cast(${year}+1 as string),'-',cast(${month}-9 as string)), '-', cast(${day} as string));;}
 
-  }
 
 
   dimension: Join_Key_LQ_Raw {

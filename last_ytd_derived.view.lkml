@@ -1,29 +1,12 @@
 view: last_ytd_derived {
     derived_table: {
-      sql: SELECT
-           Date,
-           Sales,
-           SUM(Sales) OVER (ORDER BY Date ASC rows unbounded preceding) as last_ytd_sales_raw
-           FROM rob.updateddates
-           WHERE
-
-            CASE WHEN
-            (EXTRACT(MONTH FROM Date) = EXTRACT(MONTH FROM CURRENT_DATE())
-            AND
-            EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)))
-
-            THEN EXTRACT(DAY FROM Date) <= EXTRACT(DAY FROM CURRENT_DATE())
-
-            WHEN
-            (EXTRACT(MONTH FROM Date) < EXTRACT(MONTH FROM CURRENT_DATE())
-            AND
-            EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR)))
-
-            THEN  EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR))
-
-
-            END
-           GROUP BY Date, Sales
+      sql:
+        SELECT
+         Date,
+         EXTRACT(YEAR FROM Date),
+         Sales,
+         SUM(Sales) OVER (PARTITION BY EXTRACT(YEAR FROM Date) ORDER BY Date ASC rows unbounded preceding) as lytd_sales_raw
+         FROM rob.updateddates
            ;;
       persist_for: "48 hours"
     }

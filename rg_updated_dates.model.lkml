@@ -10,6 +10,10 @@ datagroup: rg_dates_example_default_datagroup {
 
 persist_with: rg_dates_example_default_datagroup
 
+explore: raw_data2 {view_name:raw_data label:"example"}
+
+explore: qtd_derived {}
+
 explore: raw_data {
   join: mtd_derived{
     view_label: "Raw Data"

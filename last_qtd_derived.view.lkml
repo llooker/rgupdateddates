@@ -1,19 +1,13 @@
 view: last_qtd_derived {
   derived_table: {
-      sql: SELECT
+      sql:
+
+      SELECT
            Date,
            Sales,
-           SUM(Sales) OVER (ORDER BY Date ASC rows unbounded preceding) as last_qtd_sales_raw
+           SUM(Sales) OVER (PARTITION BY DATE_TRUNC(date, quarter) ORDER BY Date ASC rows unbounded preceding) as last_qtd_sales_raw
            FROM rob.updateddates
-          WHERE
-            CASE WHEN
-            EXTRACT(QUARTER FROM Date) = 4 AND
-            EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 YEAR))
-            THEN
-            EXTRACT(QUARTER FROM Date) = 4
 
-          END
-           GROUP BY Date, Sales
            ;;
       persist_for: "48 hours"
     }
@@ -44,9 +38,17 @@ view: last_qtd_derived {
   }
 
   dimension: Join_Key_LQTD_Raw {
-    hidden: yes
+    #hidden: yes
     type: string
-    sql: concat(cast(${year}+1 as string),'-',cast(${month}-9 as string), '-', cast(${day} as string));;
+    sql:
+
+    CASE WHEN ${month} = 10 OR ${month} = 11 OR ${month} = 12
+    THEN
+    concat(cast(${year}+1 as string),'-',cast(${month}-9 as string), '-', cast(${day} as string))
+    ELSE
+    concat(cast(${year} as string),'-',cast(${month}+3 as string), '-', cast(${day} as string))
+    END
+  ;;
 
   }
 

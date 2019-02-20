@@ -2,13 +2,10 @@ view: last_mtd_derived {
     derived_table: {
       sql: SELECT
            Date,
-           Sales,
-           SUM(Sales) OVER (ORDER BY Date ASC rows unbounded preceding) as last_mtd_sales_raw
-           FROM rob.updateddates
-           WHERE EXTRACT(DAY FROM Date) <= EXTRACT(DAY FROM CURRENT_DATE())
-           AND EXTRACT(MONTH FROM Date) = EXTRACT(MONTH FROM DATE_SUB(CURRENT_DATE(), INTERVAL 1 MONTH))
-           AND EXTRACT(YEAR FROM Date) = EXTRACT(YEAR FROM CURRENT_DATE())
-           GROUP BY Date, Sales
+         EXTRACT(MONTH FROM Date),
+         Sales,
+         SUM(Sales) OVER (PARTITION BY EXTRACT(MONTH FROM Date) ORDER BY Date ASC rows unbounded preceding) as mtd_sales_raw
+         FROM rob.updateddates
            ;;
       persist_for: "48 hours"
     }
