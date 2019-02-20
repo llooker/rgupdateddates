@@ -2,9 +2,8 @@ view: mtd_derived {
   derived_table: {
   sql: SELECT
            Date,
-         EXTRACT(MONTH FROM Date),
          Sales,
-         SUM(Sales) OVER (PARTITION BY EXTRACT(MONTH FROM Date) ORDER BY Date ASC rows unbounded preceding) as mtd_sales_raw
+         SUM(Sales) OVER (PARTITION BY EXTRACT(MONTH FROM Date),EXTRACT(YEAR FROM Date) ORDER BY Date ASC rows unbounded preceding) as mtd_sales_raw
          FROM rob.updateddates
 
    ;;

@@ -2,9 +2,8 @@ view: last_mtd_derived {
     derived_table: {
       sql: SELECT
            Date,
-         EXTRACT(MONTH FROM Date),
          Sales,
-         SUM(Sales) OVER (PARTITION BY EXTRACT(MONTH FROM Date) ORDER BY Date ASC rows unbounded preceding) as last_mtd_sales_raw
+         SUM(Sales) OVER (PARTITION BY EXTRACT(MONTH FROM Date),EXTRACT(YEAR FROM Date) ORDER BY Date ASC rows unbounded preceding) as last_mtd_sales_raw
          FROM rob.updateddates
            ;;
       persist_for: "48 hours"
