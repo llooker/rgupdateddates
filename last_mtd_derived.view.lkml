@@ -10,6 +10,27 @@ view: last_mtd_derived {
       persist_for: "48 hours"
     }
 
+  dimension: Join_Key_LMTD_Raw {
+    hidden: yes
+    sql: DATE_ADD(${TABLE}.Date, INTERVAL 1 MONTH);;
+  }
+
+
+  dimension: last_mtd_sales_raw {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.last_mtd_sales_raw ;;
+  }
+
+  measure: last_mtd_total_sales {
+    group_label: "Previous Sales Metrics"
+    label: "Last MTD Sales"
+    type: number
+    sql: coalesce(max(${last_mtd_sales_raw}),0) ;;
+    value_format_name: usd
+  }
+
+
     dimension_group: date {
       hidden: yes
       type: time
@@ -26,24 +47,6 @@ view: last_mtd_derived {
       sql: ${TABLE}.Date ;;
     }
 
-    dimension: Join_Key_LMTD_Raw {
-      hidden: yes
-      sql: DATE_ADD(${TABLE}.Date, INTERVAL 1 MONTH);;
-    }
 
-
-    dimension: last_mtd_sales_raw {
-      hidden: yes
-      type: number
-      sql: ${TABLE}.last_mtd_sales_raw ;;
-    }
-
-    measure: last_mtd_total_sales {
-      group_label: "Previous Sales Metrics"
-      label: "Last MTD Sales"
-      type: number
-      sql: coalesce(max(${last_mtd_sales_raw}),0) ;;
-      value_format_name: usd
-    }
 
   }

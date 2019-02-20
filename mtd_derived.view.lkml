@@ -11,22 +11,6 @@ view: mtd_derived {
    persist_for: "48 hours"
  }
 
-  dimension_group: date {
-    hidden: yes
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}.Date ;;
-  }
-
   dimension: Join_Key_MTD_Derived {
     hidden: yes
     sql: ${TABLE}.Date;;
@@ -46,5 +30,23 @@ view: mtd_derived {
     sql: coalesce(max(${mtd_sales_raw}),0) ;;
     value_format_name: usd
   }
+
+  dimension_group: date {
+    hidden: yes
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.Date ;;
+  }
+
+
 
 }

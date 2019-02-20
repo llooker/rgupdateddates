@@ -10,22 +10,6 @@ view: qtd_derived {
     persist_for: "48 hours"
   }
 
-  dimension_group: date {
-    hidden: yes
-    type: time
-    timeframes: [
-      raw,
-      date,
-      week,
-      month,
-      quarter,
-      year
-    ]
-    convert_tz: no
-    datatype: date
-    sql: ${TABLE}.Date ;;
-  }
-
   dimension: Join_Key_QTD_Derived {
     hidden: yes
     type: string
@@ -46,5 +30,23 @@ view: qtd_derived {
     sql: coalesce(max(${qtd_sales_raw}),0) ;;
     value_format_name: usd
   }
+
+
+  dimension_group: date {
+    hidden: yes
+    type: time
+    timeframes: [
+      raw,
+      date,
+      week,
+      month,
+      quarter,
+      year
+    ]
+    convert_tz: no
+    datatype: date
+    sql: ${TABLE}.Date ;;
+  }
+
 
 }

@@ -10,18 +10,6 @@ view: last_month_derived {
     persist_for: "48 hours"
   }
 
-dimension: month {
-  hidden: yes
-  type: number
-  sql: ${TABLE}.Month ;;
-}
-
-  dimension: year {
-    hidden: yes
-    type: number
-    sql: ${TABLE}.Year ;;
-  }
-
 
   dimension: Join_Key_Last_Month_Derived {
     hidden: yes
@@ -44,5 +32,18 @@ dimension: month {
     sql: coalesce(max(${last_month_sales_raw}),0) ;;
     value_format_name: usd
   }
+
+  dimension: month {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.Month ;;
+  }
+
+  dimension: year {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.Year ;;
+  }
+
 
 }

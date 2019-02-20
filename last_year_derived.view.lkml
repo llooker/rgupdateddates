@@ -9,6 +9,28 @@ view: last_year_derived {
       persist_for: "48 hours"
     }
 
+  dimension: Join_Key_LY_Raw {
+    hidden: yes
+    type: string
+    sql: Concat(cast(${year}+1 as string));;
+
+  }
+
+  dimension: last_year_sales_raw {
+    hidden: yes
+    type: number
+    sql: ${TABLE}.last_year_sales_raw ;;
+  }
+
+  measure: last_year_total_sales {
+    group_label: "Previous Sales Metrics"
+    label: "Last Year Sales"
+    type: number
+    sql: coalesce(max(${last_year_sales_raw}),0) ;;
+    value_format_name: usd
+  }
+
+
     dimension: year {
       hidden: yes
       type: number
@@ -16,25 +38,6 @@ view: last_year_derived {
     }
 
 
-    dimension: Join_Key_LY_Raw {
-      hidden: yes
-      type: string
-      sql: Concat(cast(${year}+1 as string));;
 
-    }
-
-    dimension: last_year_sales_raw {
-      hidden: yes
-      type: number
-      sql: ${TABLE}.last_year_sales_raw ;;
-    }
-
-    measure: last_year_total_sales {
-      group_label: "Previous Sales Metrics"
-      label: "Last Year Sales"
-      type: number
-      sql: coalesce(max(${last_year_sales_raw}),0) ;;
-      value_format_name: usd
-    }
 
   }
